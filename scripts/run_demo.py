@@ -21,14 +21,15 @@ if __name__=="__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument('--left_file', default=f'{code_dir}/../assets/left.png', type=str)
   parser.add_argument('--right_file', default=f'{code_dir}/../assets/right.png', type=str)
-  parser.add_argument('--ckpt_dir', default='/home/bowen/debug/2024-12-13-23-51-11/model_best_bp2.pth', type=str)
-  parser.add_argument('--out_dir', default='/home/bowen/debug/', type=str, help='the directory to save results')
-  parser.add_argument('--scale', default=1, type=float, help='downsize the image by scale')
+  parser.add_argument('--intrinsic_file', default=f'{code_dir}/../assets/K.txt', type=str, help='camera intrinsic matrix and baseline file')
+  parser.add_argument('--ckpt_dir', default=f'{code_dir}/../pretrained_models/23-51-11/model_best_bp2.pth', type=str, help='pretrained model path')
+  parser.add_argument('--out_dir', default=f'{code_dir}/../output/', type=str, help='the directory to save results')
+  parser.add_argument('--scale', default=1, type=float, help='downsize the image by scale, must be <=1')
   parser.add_argument('--hiera', default=0, type=int, help='hierarchical inference (only needed for high-resolution images (>1K))')
   parser.add_argument('--z_far', default=10, type=float, help='max depth to clip in point cloud')
   parser.add_argument('--valid_iters', type=int, default=32, help='number of flow-field updates during forward pass')
-  parser.add_argument('--get_pc', type=int, default=1, help='get point cloud output')
-  parser.add_argument('--intrinsic_file', default=f'{code_dir}/../assets/K.txt', type=str)
+  parser.add_argument('--get_pc', type=int, default=1, help='save point cloud output')
+  parser.add_argument('--remove_invisible', default=1, type=int, help='remove non-overlapping observations between left and right images from point cloud, so the remaining points are more reliable')
   parser.add_argument('--denoise_cloud', type=int, default=1, help='whether to denoise the point cloud')
   parser.add_argument('--denoise_nb_points', type=int, default=30, help='number of points to consider for radius outlier removal')
   parser.add_argument('--denoise_radius', type=float, default=0.03, help='radius to use for outlier removal')
@@ -61,6 +62,7 @@ if __name__=="__main__":
   img0 = imageio.imread(args.left_file)
   img1 = imageio.imread(args.right_file)
   scale = args.scale
+  assert scale<=1, "scale must be <=1"
   img0 = cv2.resize(img0, fx=scale, fy=scale, dsize=None)
   img1 = cv2.resize(img1, fx=scale, fy=scale, dsize=None)
   H,W = img0.shape[:2]
@@ -84,6 +86,12 @@ if __name__=="__main__":
   imageio.imwrite(f'{args.out_dir}/vis.png', vis)
   logging.info(f"Output saved to {args.out_dir}")
 
+  if args.remove_invisible:
+    yy,xx = np.meshgrid(np.arange(disp.shape[0]), np.arange(disp.shape[1]), indexing='ij')
+    us_right = xx-disp
+    invalid = us_right<0
+    disp[invalid] = np.inf
+
   if args.get_pc:
     with open(args.intrinsic_file, 'r') as f:
       lines = f.readlines()
@@ -105,3 +113,14 @@ if __name__=="__main__":
       cl, ind = pcd.remove_radius_outlier(nb_points=args.denoise_nb_points, radius=args.denoise_radius)
       inlier_cloud = pcd.select_by_index(ind)
       o3d.io.write_point_cloud(f'{args.out_dir}/cloud_denoise.ply', inlier_cloud)
+      pcd = inlier_cloud
+
+    logging.info("Visualizing point cloud. Press ESC to exit.")
+    vis = o3d.visualization.Visualizer()
+    vis.create_window()
+    vis.add_geometry(pcd)
+    vis.get_render_option().point_size = 1.0
+    vis.get_render_option().background_color = np.array([0.5, 0.5, 0.5])
+    vis.run()
+    vis.destroy_window()
+

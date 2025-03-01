@@ -7,24 +7,15 @@
 # license agreement from NVIDIA CORPORATION is strictly prohibited.
 
 
-import os, sys, time,torch,pickle,trimesh,itertools,pdb,zipfile,datetime,imageio,gzip,logging,joblib,importlib,uuid,signal,multiprocessing,psutil,subprocess,tarfile,scipy,argparse,bisect,shutil,readline,io,base64,weakref,socket,traceback
-from scipy.interpolate import griddata
+import os, sys, time,torch,torchvision,pickle,trimesh,itertools,datetime,imageio,logging,joblib,importlib,argparse
 import torch.nn.functional as F
-import torchvision
 import torch.nn as nn
 from functools import partial
 import pandas as pd
 import open3d as o3d
-from uuid import uuid4
 import cv2
 import numpy as np
-from collections import defaultdict
-import multiprocessing as mp
-import matplotlib.pyplot as plt
-import math,glob,re,copy
 from transformations import *
-from omegaconf import OmegaConf
-import yaml
 code_dir = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(code_dir)
 
@@ -32,7 +23,7 @@ sys.path.append(code_dir)
 
 def set_logging_format(level=logging.INFO):
   importlib.reload(logging)
-  FORMAT = '[%(filename)s:%(funcName)s()] %(message)s'
+  FORMAT = '%(message)s'
   logging.basicConfig(level=level, format=FORMAT, datefmt='%m-%d|%H:%M:%S')
 
 set_logging_format()

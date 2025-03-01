@@ -195,7 +195,7 @@ class Resize(object):
                 #     sample["semseg_mask"], (width, height), interpolation=cv2.INTER_NEAREST
                 # )
                 sample["semseg_mask"] = F.interpolate(torch.from_numpy(sample["semseg_mask"]).float()[None, None, ...], (height, width), mode='nearest').numpy()[0, 0]
-                
+
             if "mask" in sample:
                 sample["mask"] = cv2.resize(
                     sample["mask"].astype(np.float32),
@@ -236,11 +236,11 @@ class PrepareForNet(object):
         if "mask" in sample:
             sample["mask"] = sample["mask"].astype(np.float32)
             sample["mask"] = np.ascontiguousarray(sample["mask"])
-        
+
         if "depth" in sample:
             depth = sample["depth"].astype(np.float32)
             sample["depth"] = np.ascontiguousarray(depth)
-            
+
         if "semseg_mask" in sample:
             sample["semseg_mask"] = sample["semseg_mask"].astype(np.float32)
             sample["semseg_mask"] = np.ascontiguousarray(sample["semseg_mask"])

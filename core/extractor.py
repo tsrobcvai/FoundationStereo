@@ -292,10 +292,6 @@ class DepthAnythingFeature(nn.Module):
         from depth_anything.dpt import DepthAnything
         self.encoder = encoder
         depth_anything = DepthAnything(model_configs[encoder])
-        code_dir = os.path.dirname(os.path.realpath(__file__))
-        ckpt_file = f'{code_dir}/../pretrained_models/dino/depth_anything_v2_{encoder}.pth'
-        ckpt = torch.load(ckpt_file)
-        depth_anything.load_state_dict(ckpt)
         self.depth_anything = depth_anything
 
         self.intermediate_layer_idx = {   #!NOTE For V2
