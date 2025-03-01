@@ -1,0 +1,35 @@
+name: foundation_stereo
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pytorch=2.4.0
+  - torchvision=0.19.0
+  - torchaudio=2.4.0
+  - pip
+  - pip:
+    - scikit-image
+    - omegaconf
+    - opencv-contrib-python
+    - imgaug
+    - ninja
+    - timm
+    - albumentations
+    - jupyterlab
+    - scipy
+    - joblib
+    - scikit-learn
+    - ruamel.yaml
+    - trimesh
+    - pyyaml
+    - imageio
+    - open3d
+    - transformations
+    - einops
+    - gdown
+    - git+https://github.com/lilohuang/PyTurboJPEG.git
+    - flash-attn
+    - nodejs
