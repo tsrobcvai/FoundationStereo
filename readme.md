@@ -15,7 +15,8 @@ Tremendous progress has been made in deep stereo matching to excel on benchmark 
 </p>
 
 
-TLDR: Our method takes as input a pair of stereo images and outputs a dense disparity map, which can be converted to a metric-scale depth map or 3D point cloud.
+**TLDR**: Our method takes as input a pair of stereo images and outputs a dense disparity map, which can be converted to a metric-scale depth map or 3D point cloud.
+
 <p align="center">
   <video width="700" autoplay loop muted playsinline>
     <source src="teaser/desk.mp4" type="video/mp4">
@@ -53,6 +54,11 @@ conda activate foundation_stereo
 ```
 python scripts/run_demo.py --left_file ./assets/left.png --right_file ./assets/right.png --ckpt_dir ./checkpoints/model_best_bp2.pth --out_dir ./test_outputs/
 ```
+You can see output point cloud.
+
+<p align="center">
+  <img src="./teaser/output.jpg" width="700"/>
+</p>
 
 Tips:
 - The input left and right images should be **rectified and undistorted**, which means there should not be fisheye kind of lens distortion and the epipolar lines are horizontal between the left/right images. If you obtain images from stereo cameras such as Zed, they usually have [handled this](https://github.com/stereolabs/zed-sdk/blob/3472a79fc635a9cee048e9c3e960cc48348415f0/recording/export/svo/python/svo_export.py#L124) for you.
@@ -62,12 +68,13 @@ Tips:
 - For high-resolution image (>1000px), you can run with `--hiera 1` to enable hierarchical inference for better performance.
 - For faster inference, you can reduce the input image resolution by e.g. `--scale 0.5`, and reduce refine iterations by e.g. `--valid_iters 16`.
 
+
 # BibTeX
 ```
 @article{wen2025stereo,
   title={FoundationStereo: Zero-Shot Stereo Matching},
   author={Bowen Wen and Matthew Trepte and Joseph Aribido and Jan Kautz and Orazio Gallo and Stan Birchfield},
-  journal={arXiv},
+  journal={CVPR},
   year={2025}
 }
 ```
