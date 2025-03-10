@@ -16,10 +16,12 @@ Tremendous progress has been made in deep stereo matching to excel on benchmark 
 
 
 **TLDR**: Our method takes as input a pair of stereo images and outputs a dense disparity map, which can be converted to a metric-scale depth map or 3D point cloud.
+https://github.com/user-attachments/assets/06366504-556c-4133-9d2d-a16c2be4511a
+
 
 <p align="center">
   <video width="700" autoplay loop muted playsinline>
-    <source src="teaser/desk.mp4" type="video/mp4">
+    <source src="https://github.com/user-attachments/assets/06366504-556c-4133-9d2d-a16c2be4511a" type="video/mp4">
   </video>
 </p>
 
