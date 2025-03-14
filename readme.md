@@ -60,7 +60,7 @@ You can see output point cloud.
 Tips:
 - The input left and right images should be **rectified and undistorted**, which means there should not be fisheye kind of lens distortion and the epipolar lines are horizontal between the left/right images. If you obtain images from stereo cameras such as Zed, they usually have [handled this](https://github.com/stereolabs/zed-sdk/blob/3472a79fc635a9cee048e9c3e960cc48348415f0/recording/export/svo/python/svo_export.py#L124) for you.
 - We recommend to use PNG files with no lossy compression
-- Our method works best on stereo RGB images. However, we have also tested it on gray scale images or IR images and it works well too.
+- Our method works best on stereo RGB images. However, we have also tested it on monochrome or IR stereo images (e.g. from RealSense D4XX series) and it works well too.
 - For all options and instructions, check by `python scripts/run_demo.py --help`
 - To get point cloud for your own data, you need to specify the intrinsics. In the intrinsic file in args, 1st line is the flattened 1x9 intrinsic matrix, 2nd line is the baseline (distance) between the left and right camera, unit in meters.
 - For high-resolution image (>1000px), you can run with `--hiera 1` to enable hierarchical inference for better performance.
@@ -73,6 +73,18 @@ Tips:
 
 - Q: RuntimeError: cuDNN error: CUDNN_STATUS_NOT_SUPPORTED. This error may appear if you passed in a non-contiguous input.<br>
   A: This may indicate OOM issue. Try reducing your image resolution or use a GPU with more memory.
+
+
+# ONNX/TensorRT Inference (Experimental)
+To create ONNX models, run:
+```
+export XFORMERS_DISABLED=1
+python scripts/make_onnx.py --save_path ./output/foundation_stereo.onnx --ckpt_dir ./pretrained_models/23-51-11/model_best_bp2.pth --height 480 --width 640 --valid_iters 22
+```
+
+We have observed 6X speed on the same GPU 3090 with TensorRT FP16. Although how much it speeds up depends on various factors, we recommend trying it out if you care about faster inference.
+
+This feature is experimental as of now and contributions are welcome!
 
 
 # FSD Dataset
