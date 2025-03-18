@@ -67,13 +67,6 @@ Tips:
 - For faster inference, you can reduce the input image resolution by e.g. `--scale 0.5`, and reduce refine iterations by e.g. `--valid_iters 16`.
 
 
-# FAQ
-- Q: My GPU doesn't support Flash attention?<br>
-  A: See [this](https://github.com/NVlabs/FoundationStereo/issues/13#issuecomment-2708791825).
-
-- Q: RuntimeError: cuDNN error: CUDNN_STATUS_NOT_SUPPORTED. This error may appear if you passed in a non-contiguous input.<br>
-  A: This may indicate OOM issue. Try reducing your image resolution or use a GPU with more memory.
-
 
 # ONNX/TensorRT Inference (Experimental)
 To create ONNX models, run:
@@ -93,6 +86,18 @@ Coming soon by the end of March. Stay tuned!
 <p align="center">
   <img src="https://raw.githubusercontent.com/NVlabs/FoundationStereo/website/static/images/sdg_montage.jpg" width="800"/>
 </p>
+
+
+# FAQ
+- Q: My GPU doesn't support Flash attention?<br>
+  A: See [this](https://github.com/NVlabs/FoundationStereo/issues/13#issuecomment-2708791825)
+
+- Q: RuntimeError: cuDNN error: CUDNN_STATUS_NOT_SUPPORTED. This error may appear if you passed in a non-contiguous input.<br>
+  A: This may indicate OOM issue. Try reducing your image resolution or use a GPU with more memory.
+
+- Q: How to run with RealSense?<br>
+  A: See [this](https://github.com/NVlabs/FoundationStereo/issues/26)
+
 
 # BibTeX
 ```
