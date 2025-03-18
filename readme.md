@@ -59,6 +59,7 @@ You can see output point cloud.
 
 Tips:
 - The input left and right images should be **rectified and undistorted**, which means there should not be fisheye kind of lens distortion and the epipolar lines are horizontal between the left/right images. If you obtain images from stereo cameras such as Zed, they usually have [handled this](https://github.com/stereolabs/zed-sdk/blob/3472a79fc635a9cee048e9c3e960cc48348415f0/recording/export/svo/python/svo_export.py#L124) for you.
+- Do not swap left and right image. The left image should really be obtained from the left-side camera (objects will appear righter in the image).
 - We recommend to use PNG files with no lossy compression
 - Our method works best on stereo RGB images. However, we have also tested it on monochrome or IR stereo images (e.g. from RealSense D4XX series) and it works well too.
 - For all options and instructions, check by `python scripts/run_demo.py --help`
@@ -66,13 +67,6 @@ Tips:
 - For high-resolution image (>1000px), you can run with `--hiera 1` to enable hierarchical inference for better performance.
 - For faster inference, you can reduce the input image resolution by e.g. `--scale 0.5`, and reduce refine iterations by e.g. `--valid_iters 16`.
 
-
-# FAQ
-- Q: My GPU doesn't support Flash attention?<br>
-  A: See [this](https://github.com/NVlabs/FoundationStereo/issues/13#issuecomment-2708791825).
-
-- Q: RuntimeError: cuDNN error: CUDNN_STATUS_NOT_SUPPORTED. This error may appear if you passed in a non-contiguous input.<br>
-  A: This may indicate OOM issue. Try reducing your image resolution or use a GPU with more memory.
 
 
 # ONNX/TensorRT Inference (Experimental)
@@ -93,6 +87,18 @@ Coming soon by the end of March. Stay tuned!
 <p align="center">
   <img src="https://raw.githubusercontent.com/NVlabs/FoundationStereo/website/static/images/sdg_montage.jpg" width="800"/>
 </p>
+
+
+# FAQ
+- Q: My GPU doesn't support Flash attention?<br>
+  A: See [this](https://github.com/NVlabs/FoundationStereo/issues/13#issuecomment-2708791825)
+
+- Q: RuntimeError: cuDNN error: CUDNN_STATUS_NOT_SUPPORTED. This error may appear if you passed in a non-contiguous input.<br>
+  A: This may indicate OOM issue. Try reducing your image resolution or use a GPU with more memory.
+
+- Q: How to run with RealSense?<br>
+  A: See [this](https://github.com/NVlabs/FoundationStereo/issues/26)
+
 
 # BibTeX
 ```
