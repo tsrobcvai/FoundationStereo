@@ -70,10 +70,17 @@ Tips:
 
 
 # ONNX/TensorRT Inference (Experimental)
-To create ONNX models, run:
+To create ONNX models:
+- Make [this change](https://github.com/NVlabs/FoundationStereo/issues/13#issuecomment-2708791825) to replace flash-attention
+
+- Make ONNX:
 ```
 export XFORMERS_DISABLED=1
 python scripts/make_onnx.py --save_path ./output/foundation_stereo.onnx --ckpt_dir ./pretrained_models/23-51-11/model_best_bp2.pth --height 480 --width 640 --valid_iters 22
+```
+- Convert ONNX to TensorRT:
+```
+trtexec --onnx=./output/foundation_stereo.onnx --saveEngine=./output/foundation_stereo.engine --fp16 --verbose
 ```
 
 We have observed 6X speed on the same GPU 3090 with TensorRT FP16. Although how much it speeds up depends on various factors, we recommend trying it out if you care about faster inference.

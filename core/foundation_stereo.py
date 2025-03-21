@@ -19,7 +19,7 @@ from core.geometry import Combined_Geo_Encoding_Volume
 from core.submodule import *
 from core.utils.utils import *
 from Utils import *
-import time
+import time,huggingface_hub
 
 
 try:
@@ -124,7 +124,7 @@ class hourglass(nn.Module):
 
 
 
-class FoundationStereo(nn.Module):
+class FoundationStereo(nn.Module, huggingface_hub.PyTorchModelHubMixin):
     def __init__(self, args):
         super().__init__()
         self.args = args
