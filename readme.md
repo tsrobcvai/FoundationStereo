@@ -83,7 +83,7 @@ python scripts/make_onnx.py --save_path ./output/foundation_stereo.onnx --ckpt_d
 trtexec --onnx=./output/foundation_stereo.onnx --saveEngine=./output/foundation_stereo.engine --fp16 --verbose
 ```
 
-We have observed 6X speed on the same GPU 3090 with TensorRT FP16. Although how much it speeds up depends on various factors, we recommend trying it out if you care about faster inference.
+We have observed 6X speed on the same GPU 3090 with TensorRT FP16. Although how much it speeds up depends on various factors, we recommend trying it out if you care about faster inference. Also remember to adjust the args setting based on your need.
 
 This feature is experimental as of now and contributions are welcome!
 
@@ -97,6 +97,9 @@ Coming soon by the end of March. Stay tuned!
 
 
 # FAQ
+- Q: Conda install does not work for me?<br>
+  A: Check [this](https://github.com/NVlabs/FoundationStereo/issues/20)
+
 - Q: My GPU doesn't support Flash attention?<br>
   A: See [this](https://github.com/NVlabs/FoundationStereo/issues/13#issuecomment-2708791825)
 
