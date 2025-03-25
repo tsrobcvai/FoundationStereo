@@ -1,6 +1,6 @@
 # FoundationStereo: Zero-Shot Stereo Matching
 
-This is the official implementation of our paper accepted by CVPR 2025 (**All strong accept**)
+This is the official implementation of our paper accepted by CVPR 2025 Oral (**All strong accept**)
 
 [[Website]](https://nvlabs.github.io/FoundationStereo/) [[Paper]](https://arxiv.org/abs/2501.09898) [[Video]](https://www.youtube.com/watch?v=R7RgHxEXB3o)
 
@@ -89,11 +89,25 @@ This feature is experimental as of now and contributions are welcome!
 
 
 # FSD Dataset
-Coming soon by the end of March. Stay tuned!
-
 <p align="center">
   <img src="https://raw.githubusercontent.com/NVlabs/FoundationStereo/website/static/images/sdg_montage.jpg" width="800"/>
 </p>
+
+You can download the whole dataset [here](https://drive.google.com/drive/folders/1YdC2a0_KTZ9xix_HyqNMPCrClpm0-XFU?usp=sharing) (>1TB). We also provide a small [sample data](https://drive.google.com/file/d/1dJwK5x8xsaCazz5xPGJ2OKFIWrd9rQT5/view?usp=drive_link) (3GB) to peek. The whole dataset contains ~1M data points, where each consists of:
+- Left and right images
+- Ground-truth disparity
+
+You can check how to read data by using our example with the sample data:
+```
+python scripts/vis_dataset.py --dataset_path ./DATA/sample/manipulation_v5_realistic_kitchen_2500_1/dataset/data/
+```
+
+It will produce:
+<p align="center">
+  <img src="./teaser/fsd_sample.png" width="800"/>
+</p>
+
+
 
 
 # FAQ
@@ -108,6 +122,9 @@ Coming soon by the end of March. Stay tuned!
 
 - Q: How to run with RealSense?<br>
   A: See [this](https://github.com/NVlabs/FoundationStereo/issues/26)
+
+- Q: I have two or multiple RGB cameras, can I run this? <br>
+  A: You can first rectify a pair of images using this [OpenCV function](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga617b1685d4059c6040827800e72ad2b6) into stereo image pair (now they don't have relative rotations), then feed into FoundationStereo.
 
 
 # BibTeX
