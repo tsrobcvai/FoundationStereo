@@ -38,18 +38,29 @@ Our method outperforms existing approaches in zero-shot stereo matching tasks ac
 </p>
 
 # Installation
+
+We've tested on Linux with GPU 3090, 4090, A100, V100, Jetson Orin. Other GPUs should also work, but make sure you have enough memory
+
 ```
 conda env create -f environment.yml
 conda activate foundation_stereo
 ```
 
+
+
 # Model Weights
 - Download the foundation model for zero-shot inference on your data from [here](https://drive.google.com/drive/folders/1VhPebc_mMxWKccrv7pdQLTvXYVcLYpsf?usp=sharing). Put the entire folder (e.g. `23-51-11`) under `./pretrained_models/`.
 
 
+| Model | Description |
+| ----- | ----------- |
+| 23-51-11 | Our best performing model for general use, based on Vit-large |
+| 11-33-40 | Slightly lower accuracy but faster inference, based on Vit-small |
+
+
 # Run demo
 ```
-python scripts/run_demo.py --left_file ./assets/left.png --right_file ./assets/right.png --ckpt_dir ./pretrained_models/model_best_bp2.pth --out_dir ./test_outputs/
+python scripts/run_demo.py --left_file ./assets/left.png --right_file ./assets/right.png --ckpt_dir ./pretrained_models/23-51-11/model_best_bp2.pth --out_dir ./test_outputs/
 ```
 You can see output point cloud.
 
