@@ -38,18 +38,29 @@ Our method outperforms existing approaches in zero-shot stereo matching tasks ac
 </p>
 
 # Installation
+
+We've tested on Linux with GPU 3090, 4090, A100, V100, Jetson Orin. Other GPUs should also work, but make sure you have enough memory
+
 ```
 conda env create -f environment.yml
 conda activate foundation_stereo
 ```
 
+
+
 # Model Weights
 - Download the foundation model for zero-shot inference on your data from [here](https://drive.google.com/drive/folders/1VhPebc_mMxWKccrv7pdQLTvXYVcLYpsf?usp=sharing). Put the entire folder (e.g. `23-51-11`) under `./pretrained_models/`.
 
 
+| Model | Description |
+| ----- | ----------- |
+| 23-51-11 | Our best performing model for general use, based on Vit-large |
+| 11-33-40 | Slightly lower accuracy but faster inference, based on Vit-small |
+
+
 # Run demo
 ```
-python scripts/run_demo.py --left_file ./assets/left.png --right_file ./assets/right.png --ckpt_dir ./pretrained_models/model_best_bp2.pth --out_dir ./test_outputs/
+python scripts/run_demo.py --left_file ./assets/left.png --right_file ./assets/right.png --ckpt_dir ./pretrained_models/23-51-11/model_best_bp2.pth --out_dir ./test_outputs/
 ```
 You can see output point cloud.
 
@@ -64,7 +75,7 @@ Tips:
 - Our method works best on stereo RGB images. However, we have also tested it on monochrome or IR stereo images (e.g. from RealSense D4XX series) and it works well too.
 - For all options and instructions, check by `python scripts/run_demo.py --help`
 - To get point cloud for your own data, you need to specify the intrinsics. In the intrinsic file in args, 1st line is the flattened 1x9 intrinsic matrix, 2nd line is the baseline (distance) between the left and right camera, unit in meters.
-- For high-resolution image (>1000px), you can run with `--hiera 1` to enable hierarchical inference for better performance.
+- For high-resolution image (>1000px), you can either (1) run with `--hiera 1` to enable hierarchical inference to get full resolution depth but slower; or (2) run with smaller scale, e.g. `--scale 0.5` to get downsized resolution depth but faster.
 - For faster inference, you can reduce the input image resolution by e.g. `--scale 0.5`, and reduce refine iterations by e.g. `--valid_iters 16`.
 
 
@@ -121,7 +132,7 @@ It will produce:
   A: This may indicate OOM issue. Try reducing your image resolution or use a GPU with more memory.
 
 - Q: How to run with RealSense?<br>
-  A: See [this](https://github.com/NVlabs/FoundationStereo/issues/26)
+  A: See [this](https://github.com/NVlabs/FoundationStereo/issues/26) and [this](https://github.com/NVlabs/FoundationStereo/issues/80)
 
 - Q: I have two or multiple RGB cameras, can I run this? <br>
   A: You can first rectify a pair of images using this [OpenCV function](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html#ga617b1685d4059c6040827800e72ad2b6) into stereo image pair (now they don't have relative rotations), then feed into FoundationStereo.

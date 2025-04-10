@@ -25,7 +25,7 @@ if __name__ == '__main__':
     parser.add_argument('--ckpt_dir', default=f'{code_dir}/../pretrained_models/23-51-11/model_best_bp2.pth', type=str, help='pretrained model path')
     parser.add_argument('--height', type=int, default=480)
     parser.add_argument('--width', type=int, default=640)
-    parser.add_argument('--valid_iters', type=int, default=22, help='number of flow-field updates during forward pass')
+    parser.add_argument('--valid_iters', type=int, default=16, help='number of flow-field updates during forward pass')
 
     args = parser.parse_args()
     os.makedirs(os.path.dirname(args.save_path), exist_ok=True)
@@ -36,6 +36,8 @@ if __name__ == '__main__':
     cfg = OmegaConf.load(f'{os.path.dirname(ckpt_dir)}/cfg.yaml')
     for k in args.__dict__:
       cfg[k] = args.__dict__[k]
+    if 'vit_size' not in cfg:
+      cfg['vit_size'] = 'vitl'
     args = OmegaConf.create(cfg)
     logging.info(f"args:\n{args}")
     logging.info(f"Using pretrained model from {ckpt_dir}")
@@ -63,5 +65,4 @@ if __name__ == '__main__':
             'disp': {0 : 'batch_size'}
         },
     )
-    pdb.set_trace()
 
