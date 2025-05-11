@@ -43,9 +43,11 @@ We've tested on Linux with GPU 3090, 4090, A100, V100, Jetson Orin. Other GPUs s
 
 ```
 conda env create -f environment.yml
+conda run -n foundation_stereo pip install flash-attn
 conda activate foundation_stereo
 ```
 
+Note that `flash-attn` needs to be installed separately to avoid [errors during environment creation](https://github.com/NVlabs/FoundationStereo/issues/20).
 
 
 # Model Weights
