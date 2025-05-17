@@ -127,6 +127,9 @@ It will produce:
 - Q: Conda install does not work for me?<br>
   A: Check [this](https://github.com/NVlabs/FoundationStereo/issues/20)
 
+- Q: I'm not getting point cloud or getting incomplete point cloud?<br>
+  A: Check the flags in argparse about point cloud processing, such as `--z_far`, `--remove_invisible`, `--denoise_cloud`.
+
 - Q: My GPU doesn't support Flash attention?<br>
   A: See [this](https://github.com/NVlabs/FoundationStereo/issues/13#issuecomment-2708791825)
 
