@@ -158,4 +158,4 @@ We would like to thank Gordon Grigor, Jack Zhang, Karsten Patzwaldt, Hammad Mazh
 
 
 # Contact
-For questions, please reach out to [Bowen Wen](https://wenbowen123.github.io/) (bowenw@nvidia.com).
+For commercial inquiries, additional technical support, and other questions, please reach out to [Bowen Wen](https://wenbowen123.github.io/) (bowenw@nvidia.com).
