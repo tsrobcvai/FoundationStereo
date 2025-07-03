@@ -71,7 +71,7 @@ We would be using docker container from Isaac ROS and install different packages
             --left_img ${PWD}/assets/left.png \
             --right_img ${PWD}/assets/right.png \
             --save_path ${PWD}/output \
-            --pretrained pretrained_models/foundation_stereo/foundation.plan \
+            --pretrained pretrained_models/foundation_stereo/foundation.engine \
             --hiera \
             --valid_iters 32 \
             --height 288 \
