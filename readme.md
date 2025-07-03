@@ -123,12 +123,6 @@ apt-get install -y libnvinfer-dispatch10 \
 cd ../FoundationStereo
 trtexec --onnx=pretrained_models/foundation_stereo/foundation.onnx --verbose --saveEngine=pretrained_models/foundation_stereo/foundation.plan --fp16	
 
-#########################################
-# Note: demo script model expects left image to be named as im0.png and right image to be named as im1.png. So convert images in asset directory:
-# left.png -> im0.png
-# right.png -> im1.png
-#########################################
-
 python scripts/run_demo_tensorrt.py \
         --left_img ${PWD}/assets/left.png \
         --right_img ${PWD}/assets/right.png \
