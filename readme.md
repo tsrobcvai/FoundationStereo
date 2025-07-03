@@ -130,7 +130,8 @@ trtexec --onnx=pretrained_models/foundation_stereo/foundation.onnx --verbose --s
 #########################################
 
 python scripts/run_demo_tensorrt.py \
-        --left_img ${PWD}/assets/im0.png \
+        --left_img ${PWD}/assets/left.png \
+        --right_img ${PWD}/assets/right.png \
         --save_path ${PWD}/output \
         --pretrained pretrained_models/foundation_stereo/foundation.plan \
         --hiera \

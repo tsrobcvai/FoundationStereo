@@ -68,13 +68,14 @@ We would be using docker container from Isaac ROS and install different packages
 
     ```bash
     python scripts/run_demo_tensorrt.py \
-        --data_path /workspaces/foundation_stereo_inference/assets \
-        --save_path /workspaces/foundation_stereo_inference/output \
-        --pretrained pretrained_models/foundation_stereo/foundation.engine \
-        --hiera \
-        --valid_iters 32 \
-        --height 288 \
-        --width 480 \
-        --pc \
-        --z_far 10.0
+            --left_img ${PWD}/assets/left.png \
+            --right_img ${PWD}/assets/right.png \
+            --save_path ${PWD}/output \
+            --pretrained pretrained_models/foundation_stereo/foundation.plan \
+            --hiera \
+            --valid_iters 32 \
+            --height 288 \
+            --width 480 \
+            --pc \
+            --z_far 10.0
     ```

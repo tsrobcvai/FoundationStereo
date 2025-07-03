@@ -82,52 +82,52 @@ def inference_pytorch(args, model, left_img, right_img):
     return left_disp.float().cpu().numpy().squeeze()
 
 
-def inference(image_list: List[str], model, args: argparse.Namespace):
+def inference(left_img_path: str, right_img_path: str, model, args: argparse.Namespace):
 
-    for image in image_list:
-        left_img, input_left = preprocess(image, args)
-        right_img, _ = preprocess(image.replace('/im0', '/im1'), args)
+    # for image in image_list:
+    left_img, input_left = preprocess(left_img_path, args)
+    right_img, _ = preprocess(right_img_path, args)
 
-        start_time = time.time()
-        if args.pretrained.endswith('.pth'):
-            left_disp = inference_pytorch(args, model, left_img, right_img)
-        elif args.pretrained.endswith('.onnx'):  
-            left_disp = model.run(None, {
-                'left': left_img.numpy(),
-                'right': right_img.numpy()})[0]
-        else:
-            left_disp = model.run([left_img.numpy(), right_img.numpy()])[0]
-        end_time = time.time()
-        logging.info(f'Inference time: {end_time - start_time:.3f} seconds')
+    start_time = time.time()
+    if args.pretrained.endswith('.pth'):
+        left_disp = inference_pytorch(args, model, left_img, right_img)
+    elif args.pretrained.endswith('.onnx'):  
+        left_disp = model.run(None, {
+            'left': left_img.numpy(),
+            'right': right_img.numpy()})[0]
+    else:
+        left_disp = model.run([left_img.numpy(), right_img.numpy()])[0]
+    end_time = time.time()
+    logging.info(f'Inference time: {end_time - start_time:.3f} seconds')
 
-        left_disp = left_disp.squeeze()  # HxW
+    left_disp = left_disp.squeeze()  # HxW
 
-        vis = utils.vis_disparity(left_disp)
-        vis = np.concatenate([input_left, vis], axis=1)
-        imageio.imwrite(os.path.join(args.save_path, 'visual', image.split('/')[-1]), vis)
+    vis = utils.vis_disparity(left_disp)
+    vis = np.concatenate([input_left, vis], axis=1)
+    imageio.imwrite(os.path.join(args.save_path, 'visual', left_img_path.split('/')[-1]), vis)
 
-        if args.pc:
-            save_path = image.split('/')[-1].split('.')[0] + '.ply'
+    if args.pc:
+        save_path = left_img_path.split('/')[-1].split('.')[0] + '.ply'
 
-            baseline = 193.001/1e3
-            doffs = 65.555
-            K = np.array([1998.842, 0, 588.364,
-                        0, 1998.842, 505.864,
-                        0,0,1]).reshape(3,3)
-            depth = K[0,0]*baseline/(left_disp + doffs)
-            xyz_map = utils.depth2xyzmap(depth, K)
-            pcd = utils.toOpen3dCloud(xyz_map.reshape(-1,3), input_left.reshape(-1,3))
-            keep_mask = (np.asarray(pcd.points)[:,2]>0) & (np.asarray(pcd.points)[:,2]<=args.z_far)
-            keep_ids = np.arange(len(np.asarray(pcd.points)))[keep_mask]
-            pcd = pcd.select_by_index(keep_ids)
-            o3d.io.write_point_cloud(os.path.join(args.save_path, 'cloud', save_path), pcd)
+        baseline = 193.001/1e3
+        doffs = 65.555
+        K = np.array([1998.842, 0, 588.364,
+                    0, 1998.842, 505.864,
+                    0,0,1]).reshape(3,3)
+        depth = K[0,0]*baseline/(left_disp + doffs)
+        xyz_map = utils.depth2xyzmap(depth, K)
+        pcd = utils.toOpen3dCloud(xyz_map.reshape(-1,3), input_left.reshape(-1,3))
+        keep_mask = (np.asarray(pcd.points)[:,2]>0) & (np.asarray(pcd.points)[:,2]<=args.z_far)
+        keep_ids = np.arange(len(np.asarray(pcd.points)))[keep_mask]
+        pcd = pcd.select_by_index(keep_ids)
+        o3d.io.write_point_cloud(os.path.join(args.save_path, 'cloud', save_path), pcd)
 
-            ######## (Optional) remove cloud noise
-            logging.info("denoise point cloud...")
-            _, ind = pcd.remove_radius_outlier(nb_points=100, radius=0.1)
-            inlier_cloud = pcd.select_by_index(ind)
-            o3d.io.write_point_cloud(
-                os.path.join(args.save_path, 'denoised_cloud', save_path), inlier_cloud)
+        ######## (Optional) remove cloud noise
+        logging.info("denoise point cloud...")
+        _, ind = pcd.remove_radius_outlier(nb_points=100, radius=0.1)
+        inlier_cloud = pcd.select_by_index(ind)
+        o3d.io.write_point_cloud(
+            os.path.join(args.save_path, 'denoised_cloud', save_path), inlier_cloud)
 
 
 def parse_args() -> omegaconf.OmegaConf:
@@ -135,6 +135,7 @@ def parse_args() -> omegaconf.OmegaConf:
 
     # File options
     parser.add_argument('--left_img', '-l', required=True, help='Path to left image.')
+    parser.add_argument('--right_img', '-r', required=True, help='Path to right image.')
     parser.add_argument('--save_path', '-s', default='tmp', help='Path to save results.')
     parser.add_argument('--pretrained', default='2024-12-13-23-51-11/model_best_bp2.pth',
                         help='Path to pretrained model')
@@ -156,7 +157,6 @@ def parse_args() -> omegaconf.OmegaConf:
 def main():
     args = parse_args()
 
-    image_list = [args.left_img]
     os.makedirs(args.save_path, exist_ok=True)
     paths = ['continuous/disparity', 'visual', 'denoised_cloud', 'cloud']
     for p in paths:
@@ -175,9 +175,9 @@ def main():
     else:
         assert False, f'Unknown model format {args.pretrained}.'
 
-    num_runs = 5
+    num_runs = 1
     for i in range(num_runs):
-        inference(image_list, model, args)
+        inference(args.left_img, args.right_img, model, args)
 
 if __name__ == '__main__':
     main()
