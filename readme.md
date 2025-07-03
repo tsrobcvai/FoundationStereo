@@ -100,6 +100,46 @@ We have observed 6X speed on the same GPU 3090 with TensorRT FP16. Although how 
 
 This feature is experimental as of now and contributions are welcome!
 
+## Docker Installation
+Tested on NVIDIA RTX A6000 Ada
+Driver Version: 560.35.03      
+CUDA Version: 12.6 
+
+
+```bash
+docker build --network host -f docker/dockerfile -t foundation_stereo .
+
+bash docker/run_container.sh
+
+cd ..
+git clone https://github.com/onnx/onnx-tensorrt.git
+cd onnx-tensorrt
+python3 setup.py install
+
+apt-get install -y libnvinfer-dispatch10 \
+  libnvinfer-bin \
+  tensorrt 
+
+cd ../FoundationStereo
+trtexec --onnx=pretrained_models/foundation_stereo/foundation.onnx --verbose --saveEngine=pretrained_models/foundation_stereo/foundation.plan --fp16	
+
+#########################################
+# Note: demo script model expects left image to be named as im0.png and right image to be named as im1.png. So convert images in asset directory:
+# left.png -> im0.png
+# right.png -> im1.png
+#########################################
+
+python scripts/run_demo_tensorrt.py \
+        --left_img ${PWD}/assets/im0.png \
+        --save_path ${PWD}/output \
+        --pretrained pretrained_models/foundation_stereo/foundation.plan \
+        --hiera \
+        --valid_iters 32 \
+        --height 288 \
+        --width 480 \
+        --pc \
+        --z_far 10.0
+```
 
 # FSD Dataset
 <p align="center">

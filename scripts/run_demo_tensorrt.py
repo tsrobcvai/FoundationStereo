@@ -134,7 +134,7 @@ def parse_args() -> omegaconf.OmegaConf:
     parser = argparse.ArgumentParser(description='Stereo 2025')
 
     # File options
-    parser.add_argument('--data_path', '-d', required=True, nargs='*')
+    parser.add_argument('--left_img', '-l', required=True, help='Path to left image.')
     parser.add_argument('--save_path', '-s', default='tmp', help='Path to save results.')
     parser.add_argument('--pretrained', default='2024-12-13-23-51-11/model_best_bp2.pth',
                         help='Path to pretrained model')
@@ -156,9 +156,7 @@ def parse_args() -> omegaconf.OmegaConf:
 def main():
     args = parse_args()
 
-    image_list = ['/workspaces/foundation_stereo_inference/assets/im0.png']
-    # for data_path in args.data_path:
-    #     image_list += glob.glob(data_path + '/*.png') + glob.glob(data_path + '/*.jpg')
+    image_list = [args.left_img]
     os.makedirs(args.save_path, exist_ok=True)
     paths = ['continuous/disparity', 'visual', 'denoised_cloud', 'cloud']
     for p in paths:
