@@ -1,6 +1,6 @@
 # FoundationStereo: Zero-Shot Stereo Matching
 
-This is the official implementation of our paper accepted by CVPR 2025 Oral (**All strong accept**)
+This is the official implementation of our paper accepted by CVPR 2025 Oral (**Best Paper Nomination**)
 
 [[Website]](https://nvlabs.github.io/FoundationStereo/) [[Paper]](https://arxiv.org/abs/2501.09898) [[Video]](https://www.youtube.com/watch?v=R7RgHxEXB3o)
 
@@ -23,7 +23,7 @@ Tremendous progress has been made in deep stereo matching to excel on benchmark 
 # Changelog
 | Date       | Description                                      |
 |------------|--------------------------------------------------|
-| 2024/07/03 | Improve ONNX and TRT support. Add support for Jetson |
+| 2025/07/03 | Improve ONNX and TRT support. Add support for Jetson |
 
 
 # Leaderboards 🏆
@@ -153,7 +153,7 @@ It will produce:
   <img src="./teaser/fsd_sample.png" width="800"/>
 </p>
 
-
+For dataset license, please check [this](https://github.com/NVlabs/FoundationStereo/blob/master/LICENSE).
 
 
 # FAQ
