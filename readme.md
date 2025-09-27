@@ -1,3 +1,19 @@
+# FoundationStereo for rebar assembly 
+## Installation
+```
+cd FoundationStereo
+conda deactivate
+conda run -n foundation_stereo pip install flash-attn
+conda env update --name rebarbot2 --file environment_mini.yml
+# install zed sdk from https://www.stereolabs.com/en-ca/developers/release/5.0#82af3640d775, make sure the cuda version right
+sudo apt install zstd
+cd path/to/download/folder
+chmod +x ZED_SDK_UbuntuXX_cudaYY.Y_vZ.Z.Z.zstd.run
+conda activate rebarbot2 # [important] activate conda evn first, then choose installing python API inside the env
+./ZED_SDK_UbuntuXX_cudaYY.Y_vZ.Z.Z.zstd.run 
+python -m pip install cython numpy opencv-python pyopengl
+```
+
 # FoundationStereo: Zero-Shot Stereo Matching
 
 This is the official implementation of our paper accepted by CVPR 2025 Oral (**Best Paper Nomination**)
