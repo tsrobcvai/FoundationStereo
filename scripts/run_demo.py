@@ -49,7 +49,7 @@ if __name__=="__main__":
   args = OmegaConf.create(cfg)
   logging.info(f"args:\n{args}")
   logging.info(f"Using pretrained model from {ckpt_dir}")
-
+  import ipdb; ipdb.set_trace()
   model = FoundationStereo(args)
 
   ckpt = torch.load(ckpt_dir)
