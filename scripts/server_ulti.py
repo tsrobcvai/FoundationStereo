@@ -26,7 +26,6 @@ class FS_model():
         args = OmegaConf.create(cfg)
         self.model = FoundationStereo(args)
         ckpt = torch.load(ckpt_dir)
-        # import ipdb; ipdb.set_trace()
         self.model.load_state_dict(ckpt['model'])
         self.model.cuda()
         self.model.eval()
@@ -35,34 +34,47 @@ class FS_model():
         self.hiera = args.hiera
         self.out_dir = args.out_dir
         self.valid_iters = args.valid_iters
+        self.get_pc = args.get_pc
+        self.intrinsic_file = args.intrinsic_file
+        self.z_far = args.z_far
+        self.denoise_cloud = args.denoise_cloud
+        self.denoise_nb_points = args.denoise_nb_points
+        self.denoise_radius = args.denoise_radius
 
         assert self.scale<=1, "scale must be <=1"
-
         self.debug = debug
 
     def predict(self, left_rgb, right_rgb):
+        # Clear CUDA cache before processing
+        torch.cuda.empty_cache()
+        
+        with torch.no_grad():
+            img0 = cv2.resize(left_rgb, fx=self.scale, fy=self.scale, dsize=None)
+            img1 = cv2.resize(right_rgb, fx=self.scale, fy=self.scale, dsize=None)
+            H,W = img0.shape[:2]
+            img0_ori = img0.copy()
+            logging.info(f"img0: {img0.shape}")
 
-        img0 = cv2.resize(left_rgb, fx=self.scale, fy=self.scale, dsize=None)
-        img1 = cv2.resize(right_rgb, fx=self.scale, fy=self.scale, dsize=None)
-        H,W = img0.shape[:2]
-        img0_ori = img0.copy()
-        logging.info(f"img0: {img0.shape}")
+            img0 = torch.as_tensor(img0).cuda().float()[None].permute(0,3,1,2)
+            img1 = torch.as_tensor(img1).cuda().float()[None].permute(0,3,1,2)
+            padder = InputPadder(img0.shape, divis_by=32, force_square=False)
+            img0, img1 = padder.pad(img0, img1)
 
+            with torch.cuda.amp.autocast(True):
+                if not self.hiera:
+                    disp = self.model.forward(img0, img1, iters=self.valid_iters, test_mode=True)
+                else:
+                    disp = self.model.run_hierachical(img0, img1, iters=self.valid_iters, test_mode=True, small_ratio=0.5)
 
-        img0 = torch.as_tensor(img0).cuda().float()[None].permute(0,3,1,2)
-        img1 = torch.as_tensor(img1).cuda().float()[None].permute(0,3,1,2)
-        padder = InputPadder(img0.shape, divis_by=32, force_square=False)
-        img0, img1 = padder.pad(img0, img1)
-
-        with torch.cuda.amp.autocast(True):
-            if not self.hiera:
-                disp = self.model.forward(img0, img1, iters=self.valid_iters, test_mode=True)
-            else:
-                disp = self.model.run_hierachical(img0, img1, iters=self.valid_iters, test_mode=True, small_ratio=0.5)
-
-        disp = padder.unpad(disp.float())
+            disp = padder.unpad(disp.float())
+        
         disp = disp.data.cpu().numpy().reshape(H,W)
-        logging.info(f"Output saved to {self.out_dir}")
+        
+        # Clear intermediate tensors
+        del img0, img1, padder
+        torch.cuda.empty_cache()
+        
+        # logging.info(f"Output saved to {self.out_dir}")
 
         if self.debug:
             vis = vis_disparity(disp)
@@ -103,4 +115,6 @@ class FS_model():
             vis.run()
             vis.destroy_window()
 
+        # Final cleanup
+        torch.cuda.empty_cache()
         return depth

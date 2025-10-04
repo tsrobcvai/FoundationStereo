@@ -49,7 +49,7 @@ if __name__=="__main__":
   args = OmegaConf.create(cfg)
   logging.info(f"args:\n{args}")
   logging.info(f"Using pretrained model from {ckpt_dir}")
-  import ipdb; ipdb.set_trace()
+  # import ipdb; ipdb.set_trace()
   model = FoundationStereo(args)
 
   ckpt = torch.load(ckpt_dir)
@@ -77,7 +77,7 @@ if __name__=="__main__":
 
   with torch.cuda.amp.autocast(True):
     if not args.hiera:
-      disp = model.forward(img0, img1, iters=args.valid_iters, test_mode=True)
+      disp = model.forward(img0, img1, iters=args.valid_iters, test_mode=True) # img0 torch.Size([1, 3, 1088, 1920])
     else:
       disp = model.run_hierachical(img0, img1, iters=args.valid_iters, test_mode=True, small_ratio=0.5)
   disp = padder.unpad(disp.float())

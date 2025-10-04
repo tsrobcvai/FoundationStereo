@@ -16,6 +16,14 @@ conda activate rebarbot2 # [important] activate conda evn first, then choose ins
 python -m pip install cython pyopengl #  numpy opencv-python
 ```
 
+## Run demo
+```
+python scripts/run_demo.py --left_file ./assets/left_rgb.png --right_file ./assets/right_rgb.png --ckpt_dir ./pretrained_models/11-33-40/model_best_bp2.pth --out_dir ./test_outputs/
+```
+
+
+
+
 # FoundationStereo: Zero-Shot Stereo Matching
 
 This is the official implementation of our paper accepted by CVPR 2025 Oral (**Best Paper Nomination**)
