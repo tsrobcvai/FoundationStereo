@@ -90,6 +90,7 @@ class FS_model():
 
             K[:2] *= self.scale
             depth = K[0,0]*baseline/disp
+            depth = depth * 1000 # m to mm
         if self.debug:
             xyz_map = depth2xyzmap(depth, K)
             pcd = toOpen3dCloud(xyz_map.reshape(-1,3), img0_ori.reshape(-1,3))
