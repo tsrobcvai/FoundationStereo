@@ -5,4 +5,5 @@ weight/
 __pycache__
 DATA/*
 test_outputs/*
-assets/*
+assets/example2/*
+assets/official/*
